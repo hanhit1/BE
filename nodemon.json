@@ -1,0 +1,17 @@
+{
+    "restartable": "rs",
+    "ignore": [
+      "logs/*",
+      "node_modules/*"
+    ],
+    "watch": [
+      "index.js",
+      "routes/",
+      "config/"
+    ],
+    "env": {
+      "NODE_ENV": "development"
+    },
+  "exitcrash": true
+  }
+  
