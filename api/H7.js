@@ -20,7 +20,34 @@ const connectWithRetry = () => {
       }
     });
   };
-
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     responses:
+ *       200:
+ *         description: An array of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   user_id:
+ *                      type: integer
+ *                   name:
+ *                      type: string
+ *                   phone:
+ *                      type: string
+ *                   address:
+ *                      type: string
+ *                   email:
+ *                      type: string
+ *                   password:
+ *                      type: string
+ */
 router.get("/users",(req, res)=> {
     console.log("/users")
         dbConn.query("Select * from users", function (err, result) {
@@ -49,7 +76,8 @@ router.get("/users/:id",(req, res) => {
         }
     })
 });
-app.use(router);
-app.listen(port,() => {
-    console.log(`Server is running on port ${port}`);
-});
+module.exports = router;
+// app.use(router);
+// app.listen(port,() => {
+//     console.log(`Server is running on port ${port}`);
+// });

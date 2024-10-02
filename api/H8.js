@@ -1,5 +1,4 @@
-const app = express();
-const port = 5000;
+const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 const dbConn = mysql.createConnection({
@@ -19,6 +18,39 @@ const connectWithRetry = () => {
       }
     });
   };
+/**
+ * @swagger
+ * /my-profile/{id}:
+ *   get:
+ *     summary: Get user profile by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user_id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 phone:
+ *                   type: string
+ *                 address:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 password:
+ *                   type: string
+ */
 router.get("/my-profile/:id", (req, res) => {
     const user_id = req.params.id;
     console.log(user_id);
@@ -33,6 +65,70 @@ router.get("/my-profile/:id", (req, res) => {
         }
     })
 })
+/**
+ * @swagger
+ * /list-rooms:
+ *   get:
+ *     summary: Get a list of booked rooms
+ *     description: Retrieves a paginated list of rooms that have been booked, optionally filtered by hotel name. Only rooms with a checkout date greater than the current date are included.
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         description: Number of rooms to return per page (default is 10).
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         description: Page number to retrieve (default is 1).
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: search
+ *         required: false
+ *         description: A string to filter the list of rooms by hotel name.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A list of booked rooms with their details.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                     description: The name of the room.
+ *                   area:
+ *                     type: number
+ *                     description: The area of the room in square meters.
+ *                   floor:
+ *                     type: integer
+ *                     description: The floor number where the room is located.
+ *                   type:
+ *                     type: string
+ *                     description: The type of the room (e.g., Single, Double, Suite).
+ *                   price:
+ *                     type: number
+ *                     description: The price of the room per night.
+ *                   hotel_name:
+ *                     type: string
+ *                     description: The name of the hotel where the room is located.
+ *                   checkin_date:
+ *                     type: string
+ *                     format: date
+ *                     description: The date when the room can be checked in.
+ *                   checkout_date:
+ *                     type: string
+ *                     format: date
+ *                     description: The date when the room can be checked out.
+ *       500:
+ *         description: Internal server error.
+ */
 router.get("/list-rooms", (req ,res) => {
     console.log("/list-rooms");
     const limit = parseInt(req.query.limit) || 10;  
@@ -57,6 +153,46 @@ router.get("/list-rooms", (req ,res) => {
         } 
     })
 })
+/**
+ * @swagger
+ * /bookings/{id}/room:
+ *   get:
+ *     summary: Get a room by booking ID
+ *     description: room details by booking ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The booking ID.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A room with its details.
+ *         content:
+ *           application/json:
+ *             schema:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                     description: The name of the room.
+ *                   area:
+ *                     type: number
+ *                     description: The area of the room in square meters.
+ *                   floor:
+ *                     type: integer
+ *                     description: The floor number where the room is located.
+ *                   type:
+ *                     type: string
+ *                     description: The type of the room (e.g., Single, Double, Suite).
+ *                   price:
+ *                     type: number
+ *                     description: The price of the room per night.
+ *       500:
+ *         description: Internal server error.
+ */
+
 router.get("/bookings/:id/room",(req, res) => {
     const id = req.params.id;
     dbConn.query(`SELECT name, area, floor, type, price 
@@ -74,7 +210,46 @@ router.get("/bookings/:id/room",(req, res) => {
         }
     })
 })
-router.get("/user/:id/review/",(req, res) => {
+/**
+ * @swagger
+ * /user/{id}/review:
+ *   get:
+ *     summary: Get list reviews by user ID
+ *     description: list reviews by user ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The user ID.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A list of reviews.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: 
+ *                  type: object
+ *                  properties:
+ *                   review_id:
+ *                     type: string
+ *                   hotel_id:
+ *                     type: number
+ *                   user_id:
+ *                     type: integer
+ *                   rating:
+ *                     type: integer
+ *                   comment:
+ *                     type: string
+ *                   created_at:
+ *                     type: string
+ *                     format: date
+ *       500:
+ *         description: Internal server error.
+ */
+router.get("/user/:id/review",(req, res) => {
     const id = req.params.id;
     dbConn.query(`SELECT * 
                   FROM hotel_reviews
@@ -90,7 +265,8 @@ router.get("/user/:id/review/",(req, res) => {
         }
     })
 })
-app.use(router);
-app.listen(port,() => {
-    console.log(`Server is running on port ${port}`);
-});
+module.exports = router;
+// app.use(router);
+// app.listen(port,() => {
+//     console.log(`Server is running on port ${port}`);
+// });
