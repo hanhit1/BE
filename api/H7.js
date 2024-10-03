@@ -62,6 +62,39 @@ router.get("/users",(req, res)=> {
     })
 
 })
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get user by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                   user_id:
+ *                      type: integer
+ *                   name:
+ *                      type: string
+ *                   phone:
+ *                      type: string
+ *                   address:
+ *                      type: string
+ *                   email:
+ *                      type: string
+ *                   password:
+ *                      type: string
+ */
 router.get("/users/:id",(req, res) => {
     const user_id = req.params.id;
     console.log(user_id);

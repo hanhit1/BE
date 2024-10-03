@@ -7,7 +7,8 @@
     "watch": [
       "index.js",
       "routes/",
-      "config/"
+      "config/",
+      "api/"
     ],
     "env": {
       "NODE_ENV": "development"
