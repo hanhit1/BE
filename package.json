@@ -32,6 +32,8 @@
     "mysql2": "^3.11.3",
     "nodejs": "file:",
     "passport": "^0.7.0",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "sequelize": "^6.37.4",
     "swagger-jsdoc": "^6.2.8",
